@@ -295,7 +295,9 @@ helm_wrapper() {
         set -- "$@" "--post-renderer-args" "post-renderer"
     fi
 
-    "${HELM_BIN}" ${TILLER_HOST:+--host "$TILLER_HOST"} "$@"
+    # Keys configured via HELM_SECRETS_LOAD_GPG_KEYS are already loaded by run.sh.
+    # Prevent Helm-spawned plugin processes from importing them again.
+    HELM_SECRETS_LOAD_GPG_KEYS=false "${HELM_BIN}" ${TILLER_HOST:+--host "$TILLER_HOST"} "$@"
 }
 
 helm_command() {
